@@ -179,14 +179,14 @@ hostRouter.post("/resend-otp", (req, res) => {
   res.status(200).json({ message: "OTP resent successfully" });
 });
 
-//================================================Verify Host Admin with Aadhaar================================================
+//================================================Verify Host Admin with Details================================================
 
 /**
  * @swagger
- * /host/verify-aadhaar:
+ * /host/verify:
  *   post:
- *     summary: Verify Host Admin with Aadhaar
- *     description: Verifies host admin using Aadhaar card number.
+ *     summary: Host Verify
+ *     description: Verify host details including bank details.
  *     tags: [Host API]
  *     requestBody:
  *       required: true
@@ -195,12 +195,19 @@ hostRouter.post("/resend-otp", (req, res) => {
  *           schema:
  *             type: object
  *             properties:
- *               aadhaarNumber:
- *                 type: number
- *                 description: The Aadhaar card number of the host admin.
+ *               bankDetails:
+ *                 type: object
+ *                 description: The bank details of the host.
+ *                 properties:
+ *                   accountNumber:
+ *                     type: string
+ *                     description: The host's bank account number.
+ *                   IFSC:
+ *                     type: string
+ *                     description: The IFSC code of the host's bank.
  *     responses:
  *       200:
- *         description: Successfully verified host admin using Aadhaar
+ *         description: Host verified successfully.
  *         content:
  *           application/json:
  *             schema:
@@ -208,9 +215,9 @@ hostRouter.post("/resend-otp", (req, res) => {
  *               properties:
  *                 message:
  *                   type: string
- *                   description: A message confirming successful host admin verification.
+ *                   description: A message confirming successful host verification.
  *       400:
- *         description: Invalid Aadhaar number provided
+ *         description: Failed to verify host.
  *         content:
  *           application/json:
  *             schema:
@@ -218,21 +225,22 @@ hostRouter.post("/resend-otp", (req, res) => {
  *               properties:
  *                 error:
  *                   type: string
- *                   description: An error message indicating the provided Aadhaar number is invalid.
+ *                   description: An error message indicating the failed verification.
  */
-hostRouter.post("/verify-aadhaar", (req, res) => {
-  // Your Aadhaar verification logic here
-  const { aadhaarNumber } = req.body;
-  if (aadhaarNumber === 35435345454) {
-    res.status(200).json({
-      message: "Host admin verified successfully using Aadhaar",
-    });
+hostRouter.post('/verify', (req, res) => {
+  // Your host verification logic here
+  const { bankDetails } = req.body;
+  
+  // Example verification logic
+  if (bankDetails && bankDetails.accountNumber && bankDetails.IFSC) {
+    // Verification successful
+    res.status(200).json({ message: "Host verified successfully." });
   } else {
-    res.status(400).json({
-      error: "Invalid Aadhaar number",
-    });
+    // Verification failed
+    res.status(400).json({ error: "Failed to verify host." });
   }
 });
+
 //============================================== Get Host Profile==============================================
 /**
  * @swagger
