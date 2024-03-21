@@ -442,6 +442,51 @@ travelerRouter.get("/packages", (req, res) => {
   res.status(200).json(trendingDestinations);
 });
 
+/**
+ * @swagger
+ * /packages/search-package:
+ *   get:
+ *     summary: Search Packages by Destination
+ *     description: Search for packages by destination.
+ *     tags: [Traveler API]
+ *     parameters:
+ *       - in: query
+ *         name: destination
+ *         required: true
+ *         description: The destination to search for packages.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of packages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   packageId:
+ *                     type: string
+ *                     description: The ID of the package.
+ *                   name:
+ *                     type: string
+ *                     description: The name of the package.
+ *                   destination:
+ *                     type: string
+ *                     description: The destination of the package.
+ *                   date:
+ *                     type: string
+ *                     format: date
+ *                     description: The date of the package.
+ *                   price:
+ *                     type: number
+ *                     description: The price of the package.
+ *       404:
+ *         description: No packages found for the destination
+ */
+
+
 //==============================================Get Package Details========================================================================
 /**
  * @swagger
@@ -507,6 +552,53 @@ travelerRouter.get("/select-package/:packageId", (req, res) => {
 
   res.status(200).json(packageDetails);
 });
+//==============================================Get Package Details for Checkout=======================================================================
+
+/**
+ * @swagger
+ * /package-checkout/{packageId}:
+ *   get:
+ *     summary: Get Package Details for Checkout
+ *     description: Retrieve package details for the checkout page.
+ *     tags: [Traveler API]
+ *     parameters:
+ *       - in: path
+ *         name: packageId
+ *         required: true
+ *         description: The ID of the package for checkout.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of package details for checkout
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 packageId:
+ *                   type: string
+ *                   description: The ID of the package.
+ *                 name:
+ *                   type: string
+ *                   description: The name of the package.
+ *                 destination:
+ *                   type: string
+ *                   description: The destination of the package.
+ *                 date:
+ *                   type: string
+ *                   format: date
+ *                   description: The date of the package.
+ *                 price:
+ *                   type: number
+ *                   description: The price of the package.
+ *                 description:
+ *                   type: string
+ *                   description: The description of the package.
+ *       404:
+ *         description: Package not found
+ */
+
 
 //==============================================Chat with Host========================================================================
 /**
@@ -634,6 +726,24 @@ travelerRouter.get("/notifications", (req, res) => {
  *                   content:
  *                     type: string
  *                     description: The content of the blog.
+ *                   likes:
+ *                     type: number
+ *                     description: like count
+ *                   comments:
+ *                     type: array
+ *                     description: comments
+ *                     items:
+ *                       type: object
+ *                       properties:
+ *                         name:
+ *                           type: string
+ *                           description: name
+ *                         comment:
+ *                           type: string
+ *                           description: comment
+ *                         time:
+ *                           type: string
+ *                           format: date-time
  *                   date:
  *                     type: string
  *                     format: date-time
@@ -689,6 +799,24 @@ travelerRouter.get("/blogs", (req, res) => {
  *                 author:
  *                   type: string
  *                   description: The author of the selected blog.
+ *                 likes:
+ *                   type: number
+ *                   description: like count
+ *                 comments:
+ *                   type: array
+ *                   description: comments
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         description: name
+ *                       comment:
+ *                         type: string
+ *                         description: comment
+ *                       time:
+ *                         type: string
+ *                         format: date-time
  */
 travelerRouter.get("/select-blog/:id", (req, res) => {
   // Your logic to retrieve details of the selected blog based on id
@@ -740,6 +868,42 @@ travelerRouter.get("/select-blog/:id", (req, res) => {
  *                     profileImage:
  *                       type: string
  *                       description: The URL of the user's profile image.
+ *                     wallet:
+ *                       type: number
+ *                       description: current wallet amount
+ *                     walletHistory:
+ *                       type: array
+ *                       description: transactions
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           description:
+ *                             type: string
+ *                             description: cancelled/paid
+ *                           amount:
+ *                             type: number
+ *                             description: comment
+ *                           time:
+ *                             type: string
+ *                             format: date-time
+ */
+
+//==============================================My blogs========================================================================
+/**
+ * @swagger
+ * /my-blogs:
+ *   get:
+ *     summary: Get user Blogs
+ *     description: Retrieves list of the user's blogs including likes and comments.
+ *     tags: [Traveler API]
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of user blogs
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
  *                 userBlogs:
  *                   type: array
  *                   description: Blogs posted by the user.
@@ -762,31 +926,42 @@ travelerRouter.get("/select-blog/:id", (req, res) => {
  *                       image:
  *                         type: string
  *                         description: The URL of the blog's image.
+ *                       likes:
+ *                         type: number
+ *                         description: likes
+ *                       comments:
+ *                         type: number
+ *                         description: comments count
  */
-travelerRouter.get("/profile", (req, res) => {
-  // Your logic to retrieve user details and blogs posted by the user
-  const userDetails = {
-    name: "John Doe",
-    email: "john@example.com",
-    mobile: "1234567890",
-    address: "123 Main St, City, Country",
-    profileImage: "https://example.com/profile.jpg",
-  };
-
-  const userBlogs = [
-    {
-      title: "Exploring the Hidden Gems of Kyoto",
-      content:
-        "Kyoto, the former imperial capital of Japan, is known for its traditional temples, gardens, and geisha.",
-      location: "Kyoto, Japan",
-      date: new Date().toISOString(),
-      image: "https://example.com/kyoto.jpg",
-    },
-    // Add more blog objects as needed
-  ];
-
-  res.status(200).json({ userDetails, userBlogs });
-});
+//==============================================Delete Blog======================================================================
+/**
+ * @swagger
+ * /my-blogs/delete-blog/{blogId}:
+ *   delete:
+ *     summary: Delete Blog
+ *     description: Delete a blog.
+ *     tags: [Traveler API]
+ *     parameters:
+ *       - in: path
+ *         name: blogId
+ *         required: true
+ *         description: The ID of the blog to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Blog deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A message confirming successful blog deletion.
+ *       404:
+ *         description: Blog not found
+ */
 
 //==============================================Edit User Profile========================================================================
 /**
@@ -899,146 +1074,6 @@ travelerRouter.post("/create-blog", (req, res) => {
   res.status(201).json({ message: "Blog created successfully", blogId });
 });
 
-//==============================================Get Stay Bookings========================================================================
-/**
- * @swagger
- * /stay-bookings/{userId}:
- *   get:
- *     summary: Get User Stay Bookings
- *     description: Retrieves stay bookings for a specific user.
- *     tags: [Traveler API]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: ID of the user to retrieve stay bookings for.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful retrieval of user stay bookings
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   hotelDetails:
- *                     type: object
- *                     description: Details of the hotel booked.
- *                     properties:
- *                       name:
- *                         type: string
- *                         description: The name of the hotel.
- *                       location:
- *                         type: string
- *                         description: The location of the hotel.
- *                       checkIn:
- *                         type: string
- *                         format: date
- *                         description: The check-in date.
- *                       checkOut:
- *                         type: string
- *                         format: date
- *                         description: The check-out date.
- *                       guests:
- *                         type: integer
- *                         description: The number of guests.
- *
- */
-travelerRouter.get("/stay-bookings/:userId", (req, res) => {
-  // Your logic to retrieve stay bookings for the specified user
-  const { userId } = req.params;
-
-  // Your logic to fetch stay bookings from the database based on userId
-
-  // Example hotel details for demonstration purposes
-  const stayBookings = [
-    {
-      hotelDetails: {
-        name: "Example Hotel",
-        location: "City Center",
-        checkIn: "2024-04-15",
-        checkOut: "2024-04-20",
-        guests: 2,
-      },
-    },
-    // Add more stay booking objects as needed
-  ];
-
-  res.status(200).json(stayBookings);
-});
-
-//==============================================Get User Flight Bookings========================================================================
-/**
- * @swagger
- * /flight-bookings/{userId}:
- *   get:
- *     summary: Get User Flight Bookings
- *     description: Retrieves flight details for a specific user's bookings.
- *     tags: [Traveler API]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: ID of the user to retrieve flight bookings for.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: Successful retrieval of user flight bookings
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   flightDetails:
- *                     type: object
- *                     description: Details of the flight booked.
- *                     properties:
- *                       flightId:
- *                         type: string
- *                         description: The ID of the flight.
- *                       departure:
- *                         type: string
- *                         description: The departure location.
- *                       arrival:
- *                         type: string
- *                         description: The arrival location.
- *                       date:
- *                         type: string
- *                         format: date
- *                         description: The date of the flight.
- *                       price:
- *                         type: number
- *                         description: The price of the flight.
- *
- */
-travelerRouter.get("/flight-bookings/:userId", (req, res) => {
-  // Your logic to retrieve flight bookings for the specified user
-  const { userId } = req.params;
-
-  // Your logic to fetch flight bookings from the database based on userId
-
-  // Example flight details for demonstration purposes
-  const flightBookings = [
-    {
-      flightDetails: {
-        flightId: "ABC123",
-        departure: "New York",
-        arrival: "Los Angeles",
-        date: "2024-04-15",
-        price: 300,
-      },
-    },
-    // Add more flight booking objects as needed
-  ];
-
-  res.status(200).json(flightBookings);
-});
 
 //==============================================Get User Package Bookings========================================================================
 /**

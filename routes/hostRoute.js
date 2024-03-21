@@ -195,6 +195,9 @@ hostRouter.post("/resend-otp", (req, res) => {
  *           schema:
  *             type: object
  *             properties:
+ *               identityImage:
+ *                 type: string
+ *                 description: image of host identity
  *               bankDetails:
  *                 type: object
  *                 description: The bank details of the host.
@@ -240,6 +243,7 @@ hostRouter.post('/verify', (req, res) => {
     res.status(400).json({ error: "Failed to verify host." });
   }
 });
+
 
 //============================================== Get Host Profile==============================================
 /**
@@ -298,6 +302,84 @@ hostRouter.get("/profile", (req, res) => {
   };
   res.status(200).json(hostProfile);
 });
+//============================================== Get Host Wallet Details==============================================
+/**
+ * @swagger
+ * /host/wallet:
+ *   get:
+ *     summary: Get Host Wallet Details
+ *     description: Retrieves the wallet details of the host.
+ *     tags: [Host API]
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of host wallet details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 wallet:
+ *                   type: number
+ *                   description: The current balance in the host's wallet.
+ *                 walletHistory:
+ *                   type: array
+ *                   description: The transaction history of the host's wallet.
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       transactionId:
+ *                         type: string
+ *                         description: The ID of the transaction.
+ *                       amount:
+ *                         type: number
+ *                         description: The amount of the transaction.
+ *                       type:
+ *                         type: string
+ *                         description: The type of transaction (e.g., credit, debit).
+ *                       timestamp:
+ *                         type: string
+ *                         format: date-time
+ *                         description: The timestamp of the transaction.
+ *       404:
+ *         description: Host wallet not found
+ */
+//=============================================Get Scheduled Packages==============================================
+/**
+ * @swagger
+ * /host/package-schedules:
+ *   get:
+ *     summary: Get Scheduled Packages
+ *     description: Retrieves the list of scheduled packages.
+ *     tags: [Host API]
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of scheduled packages
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The name of the scheduled package.
+ *                   totalBookings:
+ *                     type: number
+ *                     description: The total number of bookings for the scheduled package.
+ *                   destination:
+ *                     type: string
+ *                     description: The destination of the scheduled package.
+ *                   date:
+ *                     type: string
+ *                     format: date
+ *                     description: The date of the scheduled package.
+ *       404:
+ *         description: No scheduled packages found
+ */
+
+
+
 
 //=============================================Get Host Packages==============================================
 
@@ -487,6 +569,53 @@ hostRouter.get("/package/:packageId", (req, res) => {
   };
   res.status(200).json(selectedPackage);
 });
+//=================================================== Get Traveler Details=========================================================
+/**
+ * @swagger
+ * /host/package/traveler-details/{travelerId}:
+ *   get:
+ *     summary: Get Traveler Details
+ *     description: Retrieves details of a specific traveler.
+ *     tags: [Host API]
+ *     parameters:
+ *       - in: path
+ *         name: travelerId
+ *         required: true
+ *         description: The ID of the traveler to retrieve details for.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of traveler details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 travelerId:
+ *                   type: string
+ *                   description: The ID of the traveler.
+ *                 travelers:
+ *                   type: array
+ *                   description: Array of traveler objects containing name, date of birth, and gender.
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         description: The name of the traveler.
+ *                       dateOfBirth:
+ *                         type: string
+ *                         format: date
+ *                         description: The date of birth of the traveler.
+ *                       gender:
+ *                         type: string
+ *                         description: The gender of the traveler.
+ *       404:
+ *         description: Traveler not found
+ */
+
+
 
 //===================================================Create Package=========================================================
 /**
@@ -584,6 +713,90 @@ hostRouter.post("/create-package", (req, res) => {
     message: "Package created successfully",
   });
 });
+//==================================================Edit Package=========================================================
+/**
+ * @swagger
+ * /host/edit-package/{packageId}:
+ *   put:
+ *     summary: Edit Package
+ *     description: Edit details of a package.
+ *     tags: [Host API]
+ *     parameters:
+ *       - in: path
+ *         name: packageId
+ *         required: true
+ *         description: The ID of the package to edit.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The updated name of the package.
+ *               destination:
+ *                 type: string
+ *                 description: The updated destination of the package.
+ *               date:
+ *                 type: string
+ *                 format: date
+ *                 description: The updated date of the package.
+ *               description:
+ *                 type: string
+ *                 description: The updated description of the package.
+ *               price:
+ *                 type: number
+ *                 description: The updated price of the package.
+ *     responses:
+ *       200:
+ *         description: Package updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A message confirming successful package update.
+ *       404:
+ *         description: Package not found
+ */
+//==================================================Delete Package=========================================================
+/**
+ * @swagger
+ * /host/delete-package/{packageId}:
+ *   delete:
+ *     summary: Delete Package
+ *     description: Delete a package.
+ *     tags: [Host API]
+ *     parameters:
+ *       - in: path
+ *         name: packageId
+ *         required: true
+ *         description: The ID of the package to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Package deleted successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A message confirming successful package deletion.
+ *       404:
+ *         description: Package not found
+ */
+
+
+
 //==================================================Get Messages=========================================================
 
 /**

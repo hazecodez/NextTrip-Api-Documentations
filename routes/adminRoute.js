@@ -176,6 +176,104 @@ adminRouter.put("/block-traveler/:travelerId", (req, res) => {
  *                   type: string
  *                   description: A message confirming the successful blocking of the traveler
  */
+//========================================================Get traveler details=============================================================
+
+adminRouter.get("/traveler-details/:userId", (req, res) => {
+  res.status(200).json({
+    name: "fdjfg",
+    address: "dfgd",
+    email: "dfjjfh",
+    mobile: 2543654,
+  });
+});
+
+/**
+ * @swagger
+ * /admin/traveler-details/{userId}:
+ *   get:
+ *     summary: Get traveler details
+ *     description: Retrieves details of a specific traveler by their user ID.
+ *     tags: [Admin API]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         description: ID of the traveler for which details are requested
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of traveler details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 name:
+ *                   type: string
+ *                   description: The name of the traveler
+ *                 address:
+ *                   type: string
+ *                   description: The address of the traveler
+ *                 email:
+ *                   type: string
+ *                   description: The email address of the traveler
+ *                 mobile:
+ *                   type: number
+ *                   description: The mobile number of the traveler
+ */
+//==========================================================Get traveler booking details====================================================
+/**
+ * @swagger
+ * /admin/traveler-bookings/{travelerId}:
+ *   get:
+ *     summary: Get Traveler Booking Details
+ *     description: Retrieves the booking details of a specific traveler, including package details and traveler list.
+ *     tags: [Admin API]
+ *     parameters:
+ *       - in: path
+ *         name: travelerId
+ *         required: true
+ *         description: The ID of the traveler.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful retrieval of traveler booking details
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 packageId:
+ *                   type: string
+ *                   description: The ID of the package booked by the traveler.
+ *                 travelers:
+ *                   type: array
+ *                   description: List of travelers associated with the booking.
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       name:
+ *                         type: string
+ *                         description: The name of the traveler.
+ *                       dateOfBirth:
+ *                         type: string
+ *                         description: The dob of the traveler.
+ *                       gender:
+ *                         type: string
+ *                         description: The gender of the traveler.
+ *                       
+ *                 status:
+ *                   type: string
+ *                   description: The status of the booking.
+ *                 price:
+ *                   type: number
+ *                   description: The total price of the booking.
+ *       404:
+ *         description: Traveler booking details not found
+ */
+
 
 //==========================================================Get package list================================================================
 // Get traveler details
@@ -225,8 +323,6 @@ adminRouter.get("/package-list", (req, res) => {
 adminRouter.get("/package-bookings/:packageId", (req, res) => {
   res.status(200).json({
     name: "john",
-    stay: "hotel",
-    flight: "mumabi",
     guests: 2,
   });
 });
@@ -256,12 +352,9 @@ adminRouter.get("/package-bookings/:packageId", (req, res) => {
  *                 name:
  *                   type: string
  *                   description: The name of the guest who booked the package
- *                 stay:
- *                   type: string
- *                   description: The type of stay booked for the package
- *                 flight:
- *                   type: string
- *                   description: The flight destination for the package booking
+ *                 price:
+ *                   type: number
+ *                   description: The amount of the package
  *                 guests:
  *                   type: number
  *                   description: The number of guests included in the package booking
@@ -321,63 +414,46 @@ adminRouter.get("/package-details/:packageId", (req, res) => {
  *                 price:
  *                   type: number
  *                   description: The price of the package
- *                 description:
- *                   type: string
- *                   description: A description of the package
+ *                 itinerary:
+ *                   type: array
+ *                   description: A itineraries of the package
  *                 images:
  *                   type: array
  *                   items:
  *                     type: string
  *                   description: An array of image URLs representing the package
  */
-
-//==========================================================Get booking details================================================================
+//==========================================================Block Package================================================================
 /**
  * @swagger
- * /admin/booking-details:
- *   get:
- *     summary: Get booking details
- *     description: Retrieves the details of a booking.
+ * /admin/package-block/{packageId}:
+ *   put:
+ *     summary: Block Package
+ *     description: Block a package by admin.
  *     tags: [Admin API]
+ *     parameters:
+ *       - in: path
+ *         name: packageId
+ *         required: true
+ *         description: The ID of the package to block.
+ *         schema:
+ *           type: string
  *     responses:
  *       200:
- *         description: Successful retrieval of booking details
+ *         description: Package blocked successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 travelerName:
+ *                 message:
  *                   type: string
- *                   description: The name of the traveler associated with the booking
- *                 departure:
- *                   type: string
- *                   description: The departure location for the booking
- *                 arrival:
- *                   type: string
- *                   description: The arrival location for the booking
- *                 tripType:
- *                   type: string
- *                   description: The type of trip (e.g., one-way, round-trip) for the booking
- *                 flightDate:
- *                   type: string
- *                   description: The date of the flight for the booking
- *                 price:
- *                   type: number
- *                   description: The total price of the booking
- *                 flightId:
- *                   type: string
- *                   description: The ID of the flight associated with the booking
- *                 guests:
- *                   type: number
- *                   description: The number of guests included in the booking
- *                 hotelName:
- *                   type: string
- *                   description: The name of the hotel booked for the stay
- *                 stayDate:
- *                   type: string
- *                   description: The date of the stay
+ *                   description: A message confirming successful package blocking.
+ *       404:
+ *         description: Package not found
  */
+
+
 
 //==========================================================Get blogs list================================================================
 
@@ -499,6 +575,12 @@ adminRouter.get("/blog-details/:blogId", (req, res) => {
  *                 userId:
  *                   type: string
  *                   description: The ID of the user who created the blog
+ *                 likes:
+ *                   type: number
+ *                   description: Likes count of the blog.
+ *                 comments:
+ *                   type: array
+ *                   description: Array of comments of the blog.
  */
 
 //=========================================================Get notifications===============================================================
@@ -572,62 +654,60 @@ adminRouter.put("/package-accept/:packageId", (req, res) => {
  *                   description: A message confirming the successful acceptance of the package
  */
 
-//========================================================Get traveler details=============================================================
-
-adminRouter.get("/traveler-details/:userId", (req, res) => {
-  res.status(200).json({
-    name: "fdjfg",
-    address: "dfgd",
-    email: "dfjjfh",
-    mobile: 2543654,
-  });
-});
-
+//========================================================Get host list=============================================================
 /**
  * @swagger
- * /admin/traveler-details/{userId}:
+ * /admin/host-list:
  *   get:
- *     summary: Get traveler details
- *     description: Retrieves details of a specific traveler by their user ID.
+ *     summary: Get Host List
+ *     description: Retrieves a list of hosts with their details.
  *     tags: [Admin API]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         description: ID of the traveler for which details are requested
- *         schema:
- *           type: string
  *     responses:
  *       200:
- *         description: Successful retrieval of traveler details
+ *         description: Successful retrieval of host list
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 name:
- *                   type: string
- *                   description: The name of the traveler
- *                 address:
- *                   type: string
- *                   description: The address of the traveler
- *                 email:
- *                   type: string
- *                   description: The email address of the traveler
- *                 mobile:
- *                   type: number
- *                   description: The mobile number of the traveler
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   name:
+ *                     type: string
+ *                     description: The name of the host.
+ *                   mobile:
+ *                     type: string
+ *                     description: The mobile number of the host.
+ *                   email:
+ *                     type: string
+ *                     format: email
+ *                     description: The email address of the host.
+ *       404:
+ *         description: No hosts found
  */
+adminRouter.get('/host-list', (req, res) => {
+  // Your logic to retrieve the list of hosts
+  const hosts = [
+    { name: "Host 1", mobile: "1234567890", email: "host1@example.com" },
+    { name: "Host 2", mobile: "9876543210", email: "host2@example.com" }
+    // Add more host objects as needed
+  ];
+
+  if (hosts.length > 0) {
+    res.status(200).json(hosts);
+  } else {
+    res.status(404).json({ message: "No hosts found" });
+  }
+});
+
 
 //========================================================Get host details=============================================================
 
 adminRouter.get("/host-details/:hostId", (req, res) => {
   res.status(200).json({
     name: "fdjfg",
-    bankDetails: "dfgd",
     email: "dfjjfh",
     mobile: 2543654,
-    aadhaar: 3545454,
   });
 });
 
@@ -657,7 +737,7 @@ adminRouter.get("/host-details/:hostId", (req, res) => {
  *                   type: string
  *                   description: The name of the host
  *                 bankDetails:
- *                   type: string
+ *                   type: array
  *                   description: The bank details of the host
  *                 email:
  *                   type: string
@@ -665,134 +745,152 @@ adminRouter.get("/host-details/:hostId", (req, res) => {
  *                 mobile:
  *                   type: number
  *                   description: The mobile number of the host
- *                 aadhaar:
- *                   type: number
- *                   description: The Aadhaar number of the host
  */
-
-//========================================================Get traveler bookings=============================================================
-
-adminRouter.get("/traveler-bookings/:travelerId", (req, res) => {
-  res.status(200).json({
-    flightBookings: {
-      flightId: "dfjhf",
-      departure: "dfdjfg",
-      arrival: "dgjhdf",
-      date: "djfhldsh",
-      price: 4343,
-    },
-    stayBookings: {
-      hotelName: "djgh",
-      date: "djfhdj",
-      price: 3545,
-      checkIn: "dhfgdhk",
-      checkOut: "fdjgj",
-    },
-    packageBookings: {
-      packageName: "dfghd",
-      destination: "dfh",
-      stay: "dfg",
-      food: "djfhg",
-      amenities: "djfg",
-      price: 1223,
-      description: "dfgf",
-      images: ["fdhg", "jdfg", "dfgdy"],
-      date: "dfgf",
-    },
-  });
-});
+//========================================================Get Host Package Lists=============================================================
 
 /**
  * @swagger
- * /admin/traveler-bookings/{travelerId}:
+ * /admin/host-list/packages/{hostId}:
  *   get:
- *     summary: Get traveler bookings
- *     description: Retrieves bookings of a specific traveler by their ID.
+ *     summary: Get Host Package Lists
+ *     description: Retrieves a list of packages offered by a specific host.
  *     tags: [Admin API]
  *     parameters:
  *       - in: path
- *         name: travelerId
+ *         name: hostId
  *         required: true
- *         description: ID of the traveler for which bookings are requested
+ *         description: The ID of the host.
  *         schema:
  *           type: string
  *     responses:
  *       200:
- *         description: Successful retrieval of traveler bookings
+ *         description: Successful retrieval of host package lists
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   packageId:
+ *                     type: string
+ *                     description: The ID of the package.
+ *                   packageName:
+ *                     type: string
+ *                     description: The name of the package.
+ *                   price:
+ *                     type: number
+ *                     description: The price of the package.
+ *       404:
+ *         description: No packages found for the host
+ */
+adminRouter.get('/host/:hostId/packages', (req, res) => {
+  const { hostId } = req.params;
+  
+  const packages = [
+    { packageId: "1", packageName: "Package 1", price: 100 },
+    { packageId: "2", packageName: "Package 2", price: 200 }
+    
+  ];
+
+  if (packages.length > 0) {
+    res.status(200).json(packages);
+  } else {
+    res.status(404).json({ message: "No packages found for the host" });
+  }
+});
+
+//======================================================== Block host by admin=============================================================
+/**
+ * @swagger
+ * /admin/block-host/{hostId}:
+ *   put:
+ *     summary: Block Host
+ *     description: Block a host by admin.
+ *     tags: [Admin API]
+ *     parameters:
+ *       - in: path
+ *         name: hostId
+ *         required: true
+ *         description: The ID of the host to block.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Host blocked successfully
  *         content:
  *           application/json:
  *             schema:
  *               type: object
  *               properties:
- *                 flightBookings:
- *                   type: object
- *                   properties:
- *                     flightId:
- *                       type: string
- *                       description: The ID of the booked flight
- *                     departure:
- *                       type: string
- *                       description: The departure location for the flight
- *                     arrival:
- *                       type: string
- *                       description: The arrival location for the flight
- *                     date:
- *                       type: string
- *                       description: The date of the flight
- *                     price:
- *                       type: number
- *                       description: The price of the flight booking
- *                 stayBookings:
- *                   type: object
- *                   properties:
- *                     hotelName:
- *                       type: string
- *                       description: The name of the booked hotel
- *                     date:
- *                       type: string
- *                       description: The date of the hotel booking
- *                     price:
- *                       type: number
- *                       description: The price of the hotel booking
- *                     checkIn:
- *                       type: string
- *                       description: The check-in date for the hotel booking
- *                     checkOut:
- *                       type: string
- *                       description: The check-out date for the hotel booking
- *                 packageBookings:
- *                   type: object
- *                   properties:
- *                     packageName:
- *                       type: string
- *                       description: The name of the booked package
- *                     destination:
- *                       type: string
- *                       description: The destination of the package
- *                     stay:
- *                       type: string
- *                       description: The type of stay included in the package
- *                     food:
- *                       type: string
- *                       description: The food options included in the package
- *                     amenities:
- *                       type: string
- *                       description: The amenities provided in the package
- *                     price:
- *                       type: number
- *                       description: The price of the package booking
- *                     description:
- *                       type: string
- *                       description: A description of the package
- *                     images:
- *                       type: array
- *                       items:
- *                         type: string
- *                       description: An array of image URLs representing the package
- *                     date:
- *                       type: string
- *                       description: The date of the package booking
+ *                 message:
+ *                   type: string
+ *                   description: A message confirming successful host blocking.
+ *       404:
+ *         description: Host not found
  */
+
+
+
+//======================================================== verify host by admin=============================================================
+
+/**
+ * @swagger
+ * /admin/host-verify/{hostId}:
+ *   put:
+ *     summary: Verify Host
+ *     description: Verify a host by admin.
+ *     tags: [Admin API]
+ *     parameters:
+ *       - in: path
+ *         name: hostId
+ *         required: true
+ *         description: The ID of the host to verify.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               verificationStatus:
+ *                 type: boolean
+ *                 description: The verification status (true for verified, false for not verified).
+ *     responses:
+ *       200:
+ *         description: Host verification successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: A message confirming successful host verification.
+ *       404:
+ *         description: Host not found
+ */
+adminRouter.put('/host/:hostId/verify', (req, res) => {
+  const { hostId } = req.params;
+  const { verificationStatus } = req.body;
+
+  // Your logic to verify the host by admin
+  // Example: Update host's verification status in the database
+  
+  if (verificationStatus !== undefined) {
+    if (verificationStatus) {
+      res.status(200).json({ message: `Host ${hostId} verified successfully` });
+    } else {
+      res.status(200).json({ message: `Host ${hostId} verification rejected` });
+    }
+  } else {
+    res.status(400).json({ message: "Invalid verification status" });
+  }
+});
+
+
 //========================================================Admin Logout=============================================================
 
 /**
